@@ -5,6 +5,7 @@ import pandas as pd
 
 df = pd.read_csv('hotels.csv', dtype=str)
 df_cards = pd.read_csv('cards.csv', dtype=str).to_dict(orient='records')
+df_cards_security = pd.read_csv('card_security.csv', dtype=str)
 print(df_cards)
 
 
@@ -58,19 +59,31 @@ class CreditCard:
             return False
 
 
+# 类继承 CreditCard
+class SecureCreditCard(CreditCard):
+    def authenticate(self, given_password):
+        password = df_cards_security.loc[df_cards_security['number'] == self.number, 'password'].squeeze()
+        if password == given_password:
+            return True
+        else:
+            return False
+
 # print(df) 拿到整个表
 hotel_id = input('Enter the id of the hotel: ')
 hotel = Hotel(hotel_id)
 
 if hotel.available():
-    card_data = CreditCard(number='5678')
-    if card_data.validate(expiration='12/28',
+    card_security_data = SecureCreditCard(number='1234567890123456')
+    if card_security_data.validate(expiration='12/28',
                            holder='JANE SMITH', cvc='456'):
-        hotel.book()
-        name = input('Enter your name: ')
-        reservation_ticket = ReservationTicket(customer_name=name, hotel_object=hotel)
-        res = reservation_ticket.generate()
-        print(res)
+        if card_security_data.authenticate(given_password='mypass'):
+            hotel.book()
+            name = input('Enter your name: ')
+            reservation_ticket = ReservationTicket(customer_name=name, hotel_object=hotel)
+            res = reservation_ticket.generate()
+            print(res)
+        else:
+            print('SecureCreditCard check failed!')
     else:
         print('Please check your payment!')
 else:
