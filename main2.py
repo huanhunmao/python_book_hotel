@@ -35,11 +35,16 @@ class ReservationTicket:
         content = f"""
         Thank you for your reservation!
         Here are you booking data:
-        Name: {self.customer_name}
+        Name: {self.the_customer_name}
         Hotel name: {self.hotel.name}
         """
         return content
 
+    @property
+    def the_customer_name(self):
+        name = self.customer_name.strip()
+        name = name.title()
+        return name
 
 hotel1 = Hotel('134')
 print(hotel1.name) # Tourist Sunny Apartment
@@ -55,3 +60,7 @@ print(Hotel.common_data) # This is a common data
 
 # 类的方法
 print(Hotel.get_hotel_count(data=df)) # 3
+
+ticket = ReservationTicket( customer_name=' KK adad ', hotel_object=hotel1)
+print(ticket.the_customer_name) # Kk Adad
+print(ticket.generate())  # 此处 也能用
