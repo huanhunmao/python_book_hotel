@@ -22,6 +22,9 @@ class Hotel:
         else:
             return False
 
+    @classmethod
+    def get_hotel_count(cls, data):
+        return len(data)
 
 class ReservationTicket:
     def __init__(self, customer_name, hotel_object):
@@ -46,3 +49,9 @@ print(hotel2.name) # Snow Palace
 
 print(hotel1.common_data) # This is a common data
 print(hotel2.common_data) # This is a common data
+
+# 也可以写成
+print(Hotel.common_data) # This is a common data
+
+# 类的方法
+print(Hotel.get_hotel_count(data=df)) # 3
